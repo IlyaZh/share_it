@@ -3,6 +3,7 @@ import { showToast } from '../utils/toast.js';
 import { decryptData, hexToBuf, base64ToArrayBuffer } from '../utils/crypto.js';
 import { apiFetch } from '../api.js';
 import { formatBytes } from '../utils/format.js';
+import { copyToClipboard } from '../utils/clipboard.js';
 
 export async function renderViewSecret({ id, key }) {
   const appContainer = document.getElementById('app');
@@ -98,10 +99,12 @@ export async function renderViewSecret({ id, key }) {
         URL.revokeObjectURL(downloadUrl);
       };
     } else {
-      document.getElementById('copy-secret-text-btn').onclick = () => {
+      document.getElementById('copy-secret-text-btn').onclick = async () => {
         const textElement = document.querySelector('.decrypted-secret-box');
-        navigator.clipboard.writeText(textElement.innerText);
-        showToast(t('toast.copySuccess'), "success");
+        const success = await copyToClipboard(textElement.innerText);
+        if (success) {
+          showToast(t('toast.copySuccess'), "success");
+        }
       };
       document.getElementById('download-file-btn').onclick = () => {
         const textElement = document.querySelector('.decrypted-secret-box');

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'secure-storage-cache-v1.0.10';
+const CACHE_NAME = 'secure-storage-cache-v1.0.11';
 const ASSETS = [
   './',
   './index.html',
@@ -15,6 +15,7 @@ const ASSETS = [
   './src/utils/toast.js',
   './src/utils/crypto.js',
   './src/utils/format.js',
+  './src/utils/clipboard.js',
   './src/views/home.js',
   './src/views/login.js',
   './src/views/register.js',

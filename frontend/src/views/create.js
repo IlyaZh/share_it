@@ -2,6 +2,7 @@ import { t } from '../locales/i18n.js';
 import { showToast } from '../utils/toast.js';
 import { encryptData, arrayBufferToBase64, bufToHex } from '../utils/crypto.js';
 import { apiFetch, state } from '../api.js';
+import { copyToClipboard } from '../utils/clipboard.js';
 import { navigate } from '../router.js';
 
 let sharedFileObject = null;
@@ -170,16 +171,18 @@ async function submitSecret() {
     document.getElementById('result-link-area').style.display = 'block';
     
     // Auto-copy link to clipboard upon creation
-    try {
-      await navigator.clipboard.writeText(secretLink);
+    const copied = await copyToClipboard(secretLink);
+    if (copied) {
       showToast(t('toast.createSuccessAndCopied') || "Секрет создан и скопирован!", "success");
-    } catch (err) {
+    } else {
       showToast(t('toast.createSuccess') || "Секрет создан!", "success");
     }
     
-    document.getElementById('copy-result-link-btn').onclick = () => {
-      navigator.clipboard.writeText(secretLink);
-      showToast(t('toast.copySuccess'), "success");
+    document.getElementById('copy-result-link-btn').onclick = async () => {
+      const success = await copyToClipboard(secretLink);
+      if (success) {
+        showToast(t('toast.copySuccess'), "success");
+      }
     };
 
     submitBtn.innerText = t('home.createBtn');
