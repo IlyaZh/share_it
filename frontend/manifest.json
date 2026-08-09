@@ -1,6 +1,7 @@
 {
   "short_name": "Share it!",
   "name": "Share it!",
+  "version": "1.0.11",
   "icons": [
     {
       "src": "icon.png",

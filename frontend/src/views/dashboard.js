@@ -3,6 +3,7 @@ import { showToast } from '../utils/toast.js';
 import { apiFetch, state, checkAuth } from '../api.js';
 import { navigate } from '../router.js';
 import { formatBytes, formatDateTime } from '../utils/format.js';
+import { copyToClipboard } from '../utils/clipboard.js';
 
 export async function renderDashboard() {
   try {
@@ -182,10 +183,11 @@ function setupInviteHandler() {
       
       const copyBtn = document.getElementById('copy-invite-btn');
       if (copyBtn) {
-        copyBtn.onclick = () => {
-          navigator.clipboard.writeText(inviteUrl).then(() => {
+        copyBtn.onclick = async () => {
+          const success = await copyToClipboard(inviteUrl);
+          if (success) {
             showToast(t('toast.copySuccess'), "success");
-          });
+          }
         };
       }
 
@@ -255,11 +257,12 @@ async function loadUserInvites(lastInviteId = null) {
     });
 
     container.querySelectorAll('.copy-link-btn').forEach(btn => {
-      btn.onclick = (e) => {
+      btn.onclick = async (e) => {
         const url = e.currentTarget.getAttribute('data-url');
-        navigator.clipboard.writeText(url).then(() => {
+        const success = await copyToClipboard(url);
+        if (success) {
           showToast(t('toast.copySuccess'), "success");
-        });
+        }
       };
     });
 
@@ -369,11 +372,12 @@ async function loadUserSecrets(lastSecretId = null) {
     });
 
     container.querySelectorAll('.copy-secret-link-btn').forEach(btn => {
-      btn.onclick = (e) => {
+      btn.onclick = async (e) => {
         const link = e.currentTarget.getAttribute('data-link');
-        navigator.clipboard.writeText(link).then(() => {
+        const success = await copyToClipboard(link);
+        if (success) {
           showToast(t('toast.copySuccess'), "success");
-        });
+        }
       };
     });
 
