@@ -1,7 +1,7 @@
 {
   "short_name": "Share it!",
   "name": "Share it!",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "icons": [
     {
       "src": "icon.png",
@@ -40,7 +40,9 @@
       "files": [
         {
           "name": "file",
-          "accept": ["*/*"]
+          "accept": [
+            "*/*"
+          ]
         }
       ]
     }

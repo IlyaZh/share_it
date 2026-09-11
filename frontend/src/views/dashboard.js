@@ -344,7 +344,7 @@ async function loadUserSecrets(lastSecretId = null) {
       const localKey = localStorage.getItem(`secret-key-${lowerId}`) || 
                         localStorage.getItem(`secret-key-${secretId}`) || 
                         localStorage.getItem(`secret-key-${upperId}`);
-      const secretLink = localKey ? `${window.location.origin}/#/secret/${secretId}:${localKey}` : '';
+      const secretLink = localKey ? `${window.location.origin}${window.location.pathname}#/secret/${secretId}:${localKey}` : '';
 
       const row = document.createElement('tr');
       row.id = `secret-item-${secretId}`;
@@ -371,22 +371,32 @@ async function loadUserSecrets(lastSecretId = null) {
       container.appendChild(row);
     });
 
-    container.querySelectorAll('.copy-secret-link-btn').forEach(btn => {
-      btn.onclick = async (e) => {
-        const link = e.currentTarget.getAttribute('data-link');
-        const success = await copyToClipboard(link);
-        if (success) {
-          showToast(t('toast.copySuccess'), "success");
+    container.onclick = async (e) => {
+      const copyBtn = e.target.closest('.copy-secret-link-btn');
+      if (copyBtn) {
+        e.preventDefault();
+        const link = copyBtn.getAttribute('data-link');
+        if (link) {
+          const success = await copyToClipboard(link);
+          if (success) {
+            showToast(t('toast.copySuccess'), "success");
+          } else {
+            showToast(t('toast.copyError') || "Error copying link", "error");
+          }
         }
-      };
-    });
+        return;
+      }
 
-    container.querySelectorAll('.burn-btn').forEach(btn => {
-      btn.onclick = async (e) => {
-        const id = e.currentTarget.getAttribute('data-id');
-        await burnSecret(id);
-      };
-    });
+      const burnBtn = e.target.closest('.burn-btn');
+      if (burnBtn) {
+        e.preventDefault();
+        const id = burnBtn.getAttribute('data-id');
+        if (id) {
+          await burnSecret(id);
+        }
+        return;
+      }
+    };
 
     if (secrets.length === 20) {
       const lastId = secrets[secrets.length - 1].id;
